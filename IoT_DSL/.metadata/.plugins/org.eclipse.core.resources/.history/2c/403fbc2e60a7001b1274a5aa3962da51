@@ -1,0 +1,55 @@
+grammar org.xtext.example.mydsl.SensorHub with org.eclipse.xtext.common.Terminals
+
+generate sensorHub "http://www.xtext.org/example/mydsl/SensorHub"
+
+SensorSystem:
+	'system' name=ID devices+=Device*
+	;
+	
+Device:
+	Fog | Edge
+	;
+
+Fog:
+	'fog' RaspPi (edgeDevices+=[Edge])*
+;
+
+RaspPi:
+	'raspberryPi' name=ID data+=Storage* visualization+=Visualizer*
+;
+
+Storage:
+	'storage' type=ID
+;
+
+Visualizer:
+	'vis' type=ID
+;
+
+Edge:
+	'edge' Arduino
+;
+
+Arduino:
+	'arduino' name=ID Com sensors+=Sensor*
+;
+
+Com:
+	'com' 'nrf24l01'
+;
+
+Sensor:
+	'sensor' name=ID ('rate' rate=INT)? preprocessor=PreProcessor
+;
+
+PreProcessor:
+	RunningAverage | Threshold
+;
+
+RunningAverage:
+	'runavg' value=INT
+;
+
+Threshold:
+	'thresh' min=INT '..' max=INT
+;

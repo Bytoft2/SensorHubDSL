@@ -1,0 +1,44 @@
+// Example program: Sensor Hub DSL
+system Home
+	fog raspberryPi Serv //The server with type and name
+        storage txt //how to store (txt, postgresql etc.)
+        visualization console //how to visualize the data (console or flask web server)
+    edge arduino Distance //arduino with name Distance (example to indicate what it senses)
+        com nrf24l01 //the communication protocol (has to be an implemented coms)
+        sensor sr04 //an ultrasonic sensor for measuring dist
+            rate 1000 //logging rate in ms
+            runavg 5 //running average over 5 samples before sending to server
+        sensor ...
+    edge arduino ...´
+    
+//Example program without comments
+system Home
+	fog raspberryPi Serv
+        storage txt
+        visualization console
+        edge arduino Distance
+        com nrf24l01
+        sensor sr04
+            rate 1000
+            runavg 5
+
+// Proposed grammar
+// EBNF
+SensorSystem ::= 'system' name=ID Device
+Device ::= Fog | Edge
+Fog ::= RaspPi //other server (some linux computer or something)
+Edge ::= Arduino //esp32 etc.
+RaspPi ::= 'raspberryPi' name=ID (Storage)* (Visualizer)*
+Storage ::= 'storage' type=ID
+Visualizer ::= 'vis' ('console' | 'web') //should prob be subclasses
+Arduino ::= 'arduino' name=ID Com (Sensor)*
+Com ::= 'com' Nrf24l01
+Nrf24l01 ::= 'nrf24l01'
+Sensor ::= 'sensor' name=ID rate=Rate? PreProcessor*
+Sound ::=
+Sr04 ::=
+Water_level ::=
+Rate ::= 'rate' value=INT
+PreProcessor ::= Average | Threshold
+Average ::= 'avg' value=INT 
+Threshold ::= 'thresh' min=INT '..' max=INT
